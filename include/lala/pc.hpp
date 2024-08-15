@@ -795,6 +795,10 @@ public:
     return sub->project(x);
   }
 
+  CUDA auto& get_refine(size_t i) const  {
+    return (*props)[i];
+  }
+
   CUDA size_t vars() const {
     return sub->vars();
   }

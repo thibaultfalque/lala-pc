@@ -263,11 +263,9 @@ public:
   template <class A2, class Alloc2>
   friend class PLatticeOrderPredicate;
 
-protected:
   sub_type left;
   U right;
 
-public:
   CUDA PLatticeOrderPredicate(sub_type&& left, U&& right): left(std::move(left)), right(std::move(right)) {}
   CUDA PLatticeOrderPredicate(this_type&& other): PLatticeOrderPredicate(std::move(other.left), std::move(other.right)) {}
 
@@ -984,7 +982,7 @@ private:
   }
 
   CUDA Formula(VFormula&& formula): formula(std::move(formula)) {}
-
+public:
   template <class F>
   CUDA NI auto forward(F&& f) const {
     switch(formula.index()) {
@@ -1034,7 +1032,6 @@ private:
     }
   }
 
-public:
   Formula() = default;
   Formula(this_type&&) = default;
   this_type& operator=(this_type&&) = default;
@@ -1178,6 +1175,10 @@ public:
   CUDA size_t length() const {
     return forward([](const auto& t) { return t.length(); });
   }
+  // template <class Compiler>
+  // CUDA void compile(const Compiler& compiler) {
+  //   return forward([&](const auto& t){return t.compile(compiler);});
+  // }
 };
 
 } // namespace pc

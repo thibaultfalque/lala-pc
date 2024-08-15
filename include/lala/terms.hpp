@@ -21,7 +21,6 @@ public:
   using A = AD;
   using U = typename A::local_universe;
 
-private:
   U k;
 
 public:
@@ -51,10 +50,7 @@ public:
   using A = AD;
   using U = typename A::local_universe;
 
-private:
   AVar avar;
-
-public:
   CUDA Variable() {}
   CUDA Variable(AVar avar) : avar(avar) {}
   Variable(Variable<A>&& other) = default;
@@ -131,7 +127,6 @@ public:
   template <class A2, class UnaryOp2, class Alloc2>
   friend class Unary;
 
-private:
   using sub_type = Term<A, allocator_type>;
   battery::unique_ptr<sub_type, allocator_type> x_term;
 
@@ -139,7 +134,6 @@ private:
     return *x_term;
   }
 
-public:
   CUDA Unary(battery::unique_ptr<sub_type, allocator_type>&& x_term): x_term(std::move(x_term)) {}
   CUDA Unary(this_type&& other): Unary(std::move(other.x_term)) {}
 
@@ -321,7 +315,7 @@ public:
   using sub_type = Term<A, allocator_type>;
   using sub_ptr = battery::unique_ptr<sub_type, allocator_type>;
 
-private:
+
   sub_ptr x_term;
   sub_ptr y_term;
 
@@ -409,12 +403,16 @@ public:
 private:
   using sub_type = Term<A, allocator_type>;
   battery::vector<sub_type, allocator_type> terms;
-
+public:
   CUDA INLINE const sub_type& t(size_t i) const {
     return terms[i];
   }
 
-public:
+  CUDA const size_t size() const
+  {
+    return terms.size();
+  }
+
   CUDA Nary(battery::vector<sub_type, allocator_type>&& terms): terms(std::move(terms)) {}
   CUDA Nary(this_type&& other): Nary(std::move(other.terms)) {}
 
@@ -569,6 +567,7 @@ private:
 
   CUDA Term(VTerm&& term): term(std::move(term)) {}
 
+public:
   template <class F>
   CUDA NI auto forward(F&& f) const {
     switch(term.index()) {
@@ -595,7 +594,6 @@ private:
     }
   }
 
-public:
   Term() = default;
   Term(this_type&&) = default;
   this_type& operator=(this_type&&) = default;
